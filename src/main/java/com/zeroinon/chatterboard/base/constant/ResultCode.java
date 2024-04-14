@@ -12,7 +12,7 @@ public enum ResultCode {
 
 
     // Login related results
-    SUCCESS(10200, HttpStatus.OK, "Login successful"),
+    SUCCESS(10200, HttpStatus.OK, "Ok"),
     UNAUTHORIZED(10401, HttpStatus.UNAUTHORIZED, "Invalid credentials or user not found"),
     FORBIDDEN(10403, HttpStatus.FORBIDDEN, "User not authorized to perform this action"),
 
@@ -43,22 +43,6 @@ public enum ResultCode {
         this.HTTP_STATUS = HTTP_STATUS;
         this.MESSAGE = MESSAGE;
     }
-
-
-//    public ResultCode valueOf(HttpStatus httpStatus) {
-//        return Arrays.stream(values())
-//                .filter(errorCode -> errorCode.getHTTP_STATUS() == httpStatus)
-//                .findFirst()
-//                .orElseGet(() -> {
-//                    if (httpStatus.is4xxClientError()) {
-//                        return ResultCode.BAD_REQUEST;
-//                    } else if (httpStatus.is5xxServerError()) {
-//                        return ResultCode.INTERNAL_SERVER_ERROR;
-//                    } else {
-//                        return ResultCode.SUCCESS;
-//                    }
-//                });
-//    }
 
 
 

@@ -17,12 +17,25 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     @org.springframework.web.bind.annotation.ExceptionHandler
-    public ResponseEntity<ErrorResponseDTO> handleUserAuthenticationException(Exception ex) {
+    public ResponseEntity<ErrorResponseDTO> handleUserAuthenticationException(UserAuthenticationException ax) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                                                            false,
+                                                            ResultCode.UNAUTHORIZED.getCODE(),
+                                                            ResultCode.UNAUTHORIZED.getMESSAGE());
+
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(409));
+    }
+
+
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<ErrorResponseDTO> handleUndefinedException(Exception ex) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 false,
-                ResultCode.UNAUTHORIZED.getCODE(),
-                ResultCode.UNAUTHORIZED.getMESSAGE());
-        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(409));
+                ResultCode.INTERNAL_SERVER_ERROR.getCODE(),
+                ResultCode.INTERNAL_SERVER_ERROR.getMESSAGE());
+
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(500));
     }
 
 
