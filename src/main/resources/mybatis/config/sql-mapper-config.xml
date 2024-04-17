@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!-- When getting NULL, you can get NULL instead of empty "" -->
+        <setting name="callSettersOnNulls" value="true"/>
+        <!-- Returns row as NULL if all columns are NULL -->
+        <setting name="returnInstanceForEmptyRow" value="true"/>
+    </settings>
+</configuration>
