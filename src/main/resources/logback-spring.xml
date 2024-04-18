@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- log 기록 절대 위치 설정 -->
+    <property name="LOGS_ABSOLUTE_PATH" value="logfile"/>
+
+    <!-- 로그 패턴에 색상 적용 %clr(pattern){color} -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+
+    <property name="CONSOLE_LOG_PATTERN"
+              value="[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] %clr(%-5level) %clr(${PID:-}){magenta} %clr(---){faint} %clr([%thread]){faint} %clr(%-40.40logger{36}){cyan} %clr(:){faint} %msg%n"/>
+    <property name="FILE_LOG_PATTERN"
+              value="[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] %-5level ${PID:-} --- [%thread] %-40.40logger{36} : %msg%n"/>
+
+    <!-- 콘솔(STDOUT) -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+            <outputPatternAsHeader>true</outputPatternAsHeader>
+        </encoder>
+    </appender>
+
+    <!-- 파일(FILE) -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--     log 기록할 파일 위치 설정 -->
+        <file>${LOGS_ABSOLUTE_PATH}/logback_a.log</file>
+        <!--     log 기록 타입 인코딩 -->
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+            <outputPatternAsHeader>true</outputPatternAsHeader>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOGS_ABSOLUTE_PATH}/%d{yyyy-MM-dd}/logFile.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- 파일당 최고 용량 kb, mb, gb -->
+                <maxFileSize>10mb</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!-- log 레벨 설정 (logging.level.root=info)-->
+    <root level="INFO">
+        <!--     참조할 appender 설정 - STDOUT, FILE-->
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+    <!-- log 레벨 설정 (org.springframework.web=DEBUG)-->
+    <logger name="org.springframework.web" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <!-- log 레벨 설정 (com.zeroinon.chatterboard=DEBUG)-->
+    <logger name="com.zeroinon.chatterboard" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+</configuration>
