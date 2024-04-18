@@ -1,10 +1,11 @@
 package com.zeroinon.chatterboard.service;
 
+import com.zeroinon.chatterboard.base.dto.GenericResponseDTO;
 import com.zeroinon.chatterboard.dto.UserDTO;
 
 public interface UserService {
 
-    void register(UserDTO userProfile);
+    GenericResponseDTO register(UserDTO userProfile);
 
     UserDTO login(String id, String password);
 

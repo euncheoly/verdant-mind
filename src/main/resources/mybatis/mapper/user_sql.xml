@@ -5,8 +5,26 @@
 
     <select id="test" resultType="String">
         select NOW();
+    </select>
+
+    <select id="isDuplicateId" resultType="int" parameterType="String">
+        select count(*)
+        from user
+        where 1=1
+        and isWithdrawn = 0
+        and userId = #{userId};
 
     </select>
+
+    <insert id="insertUser">
+        INSERT INTO user(userid, password, useralias, isAdmin, createTime)
+        values ( #{userId}
+               , #{password}
+               , #{alias}
+               , 0
+               , NOW());
+    </insert>
+
 
 
 </mapper>

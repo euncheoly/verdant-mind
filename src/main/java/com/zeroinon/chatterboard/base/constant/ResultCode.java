@@ -31,7 +31,9 @@ public enum ResultCode {
 
     // General results (add more as needed)
     INTERNAL_SERVER_ERROR(10500, HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error"),
-    BAD_REQUEST(10400, HttpStatus.BAD_REQUEST, "Invalid request");
+    BAD_REQUEST(10400, HttpStatus.BAD_REQUEST, "Invalid request"),
+    NETWORK_ERROR(10501, HttpStatus.INTERNAL_SERVER_ERROR, "Connection error"),
+    SQL_SYNTAX_ERROR(10502, HttpStatus.INTERNAL_SERVER_ERROR, "SQL syntax error"),;
 
 
     private final Integer CODE;

@@ -1,8 +1,11 @@
 package com.zeroinon.chatterboard.service.impl;
 
+import com.zeroinon.chatterboard.base.dto.GenericResponseDTO;
 import com.zeroinon.chatterboard.dto.UserDTO;
+import com.zeroinon.chatterboard.exception.UserAuthenticationException;
 import com.zeroinon.chatterboard.mapper.UserMapper;
 import com.zeroinon.chatterboard.service.UserService;
+import com.zeroinon.chatterboard.utils.SHA256Utils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,13 +18,23 @@ public class UserServiceImpl implements UserService {
         this.userMapper = userMapper;
     }
 
-    public String test(){
-        return userMapper.test();
-    }
 
     @Override
-    public void register(UserDTO userProfile) {
+    public GenericResponseDTO register(UserDTO userProfile) {
 
+        boolean duplicateResult = isDuplicateId(userProfile.getUserId());
+        if (duplicateResult) {
+            throw new UserAuthenticationException.DuplicatedUserID("Duplicated User ID");
+        }
+
+        userProfile.setPassword(SHA256Utils.encrypt(userProfile.getPassword()));
+        userProfile.setWithdrawnUser(false);
+
+        int registerResult = userMapper.insertUser(userProfile);
+        if (registerResult != 1) {
+            throw new RuntimeException("Register failed");
+        }
+        return GenericResponseDTO.of(registerResult);
     }
 
     @Override
@@ -31,7 +44,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isDuplicateId(String id) {
-        return false;
+        boolean isDuplicateId = userMapper.isDuplicateId(id) > 0 ? true : false;
+        System.out.println("isDuplicateId: " + isDuplicateId);
+        return isDuplicateId;
     }
 
     @Override

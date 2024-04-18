@@ -23,11 +23,17 @@ public class UserDTO {
     private String password;
     private String alias;
     private boolean isAdmin;
-    private Date createTime;
     private boolean isWithdrawnUser;
     private Status userStatus;
-    private Date updateTime;
 
+
+    public static boolean hasNullParameterForUserRegister(UserDTO userDTO){
+        return  userDTO.getUserId() == null ||
+                userDTO.getPassword() == null ||
+                userDTO.getAlias() == null;
+
+
+    }
 
 
 }
