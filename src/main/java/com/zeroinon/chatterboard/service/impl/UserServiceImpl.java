@@ -1,8 +1,8 @@
 package com.zeroinon.chatterboard.service.impl;
 
-import com.zeroinon.chatterboard.base.dto.GenericResponseDTO;
+import com.zeroinon.chatterboard.dto.response.GenericResponseDTO;
 import com.zeroinon.chatterboard.dto.UserDTO;
-import com.zeroinon.chatterboard.exception.UserAuthenticationException;
+import com.zeroinon.chatterboard.exception.UserException;
 import com.zeroinon.chatterboard.mapper.UserMapper;
 import com.zeroinon.chatterboard.service.UserService;
 import com.zeroinon.chatterboard.utils.SHA256Utils;
@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
         boolean duplicateResult = isDuplicateId(userProfile.getUserId());
         if (duplicateResult) {
-            throw new UserAuthenticationException.DuplicatedUserID("Duplicated User ID");
+            throw new UserException.DuplicatedUserID("Duplicated User ID");
         }
 
         userProfile.setPassword(SHA256Utils.encrypt(userProfile.getPassword()));

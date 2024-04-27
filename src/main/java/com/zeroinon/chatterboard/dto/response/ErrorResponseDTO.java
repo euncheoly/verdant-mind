@@ -1,4 +1,4 @@
-package com.zeroinon.chatterboard.base.dto;
+package com.zeroinon.chatterboard.dto.response;
 
 public class ErrorResponseDTO extends ResponseDTO {
 

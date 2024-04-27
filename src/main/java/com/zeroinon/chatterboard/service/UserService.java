@@ -1,6 +1,6 @@
 package com.zeroinon.chatterboard.service;
 
-import com.zeroinon.chatterboard.base.dto.GenericResponseDTO;
+import com.zeroinon.chatterboard.dto.response.GenericResponseDTO;
 import com.zeroinon.chatterboard.dto.UserDTO;
 
 public interface UserService {

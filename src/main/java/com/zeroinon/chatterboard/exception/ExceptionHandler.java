@@ -1,17 +1,13 @@
 package com.zeroinon.chatterboard.exception;
 
 import com.zeroinon.chatterboard.base.constant.ResultCode;
-import com.zeroinon.chatterboard.base.dto.ErrorResponseDTO;
-import org.springframework.http.HttpHeaders;
+import com.zeroinon.chatterboard.dto.response.ErrorResponseDTO;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestControllerAdvice
 public class ExceptionHandler extends ResponseEntityExceptionHandler {
@@ -19,7 +15,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     @org.springframework.web.bind.annotation.ExceptionHandler
-    public ResponseEntity<ErrorResponseDTO> handleUserAuthenticationException(UserAuthenticationException ax) {
+    public ResponseEntity<ErrorResponseDTO> handleUserAuthenticationException(UserException ax) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                                                             false,
                                                             ResultCode.UNAUTHORIZED.getCODE(),
@@ -29,7 +25,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
-    public ResponseEntity<ErrorResponseDTO> handleDuplicatedDataException(UserAuthenticationException.DuplicatedUserID du) {
+    public ResponseEntity<ErrorResponseDTO> handleDuplicatedDataException(UserException.DuplicatedUserID du) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 false,
                 ResultCode.DATA_ALREADY_EXISTS.getCODE(),
@@ -53,7 +49,8 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     @org.springframework.web.bind.annotation.ExceptionHandler
-    public ResponseEntity<ErrorResponseDTO> handleSQLSyntaxErrorException(BadSqlGrammarException jdbc) {
+    public ResponseEntity<ErrorResponseDTO> handleSQLSyntaxErrorException(BadSqlGrammarException sql ) {
+        logger.error(sql.getMessage());
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 false,
                 ResultCode.SQL_SYNTAX_ERROR.getCODE(),
@@ -78,6 +75,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<ErrorResponseDTO> handleUndefinedException(Exception ex) {
+        logger.error(ex.getMessage(), ex);
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 false,
                 ResultCode.INTERNAL_SERVER_ERROR.getCODE(),

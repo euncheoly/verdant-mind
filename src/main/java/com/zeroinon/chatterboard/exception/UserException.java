@@ -2,18 +2,18 @@ package com.zeroinon.chatterboard.exception;
 
 import com.zeroinon.chatterboard.base.constant.ResultCode;
 
-public class UserAuthenticationException extends RuntimeException {
+public class UserException extends RuntimeException {
 
 
-    public UserAuthenticationException(ResultCode resultCode) {
+    public UserException(ResultCode resultCode) {
         super(resultCode.getMESSAGE());
     }
-    public UserAuthenticationException(String message) {
+    public UserException(String message) {
         super(message);
     }
 
 
-    public static class DuplicatedUserID extends UserAuthenticationException {
+    public static class DuplicatedUserID extends UserException {
         public DuplicatedUserID(String message) {
             super(message);
         }

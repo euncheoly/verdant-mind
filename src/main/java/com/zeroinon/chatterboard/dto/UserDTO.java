@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Date;
-
 @Getter
 @Setter
 @ToString
@@ -31,9 +29,9 @@ public class UserDTO {
         return  userDTO.getUserId() == null ||
                 userDTO.getPassword() == null ||
                 userDTO.getAlias() == null;
-
-
     }
+
+
 
 
 }
