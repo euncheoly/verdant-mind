@@ -1,18 +1,19 @@
 package com.zeroinon.chatterboard.service;
 
+import com.zeroinon.chatterboard.dto.response.GenericResponseDTO;
 import com.zeroinon.chatterboard.dto.UserDTO;
 
 public interface UserService {
 
-    void register(UserDTO userProfile);
+    GenericResponseDTO register(UserDTO userProfile);
 
-    UserDTO login(String id, String password);
+    GenericResponseDTO login(UserDTO userCredentials);
 
     boolean isDuplicateId(String id);
 
     UserDTO getUserInfo(String userId);
 
-    void updatePassword(String id, String oldPassword, String newPassword);
+    GenericResponseDTO updatePassword(UserDTO userDTO);
 
     void deleteId(String id, String password);
 

@@ -14,6 +14,16 @@ public class GeneralException extends RuntimeException {
     }
 
 
+    public static class MissingParameters extends GeneralException {
+        public MissingParameters(String message) {
+            super(message);
+        }
+    }
+
+
+
+
+
 
 
 }

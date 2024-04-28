@@ -1,6 +1,5 @@
-package com.zeroinon.chatterboard.base.dto;
+package com.zeroinon.chatterboard.dto.response;
 
-import com.zeroinon.chatterboard.base.constant.ResultCode;
 import lombok.Getter;
 
 @Getter
