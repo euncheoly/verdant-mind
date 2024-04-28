@@ -7,13 +7,13 @@ public interface UserService {
 
     GenericResponseDTO register(UserDTO userProfile);
 
-    UserDTO login(String id, String password);
+    GenericResponseDTO login(UserDTO userCredentials);
 
     boolean isDuplicateId(String id);
 
     UserDTO getUserInfo(String userId);
 
-    void updatePassword(String id, String oldPassword, String newPassword);
+    GenericResponseDTO updatePassword(UserDTO userDTO);
 
     void deleteId(String id, String password);
 

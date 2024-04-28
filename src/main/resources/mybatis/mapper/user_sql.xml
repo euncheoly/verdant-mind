@@ -3,10 +3,6 @@
 <mapper namespace="com.zeroinon.chatterboard.mapper.UserMapper">
 
 
-    <select id="test" resultType="String">
-        select NOW();
-    </select>
-
     <select id="isDuplicateId" resultType="int" parameterType="String">
         select count(*)
         from user
@@ -17,13 +13,21 @@
     </select>
 
     <insert id="insertUser">
-        INSERT INTO user(userid, password, useralias, isAdmin, createTime)
+        INSERT INTO user(userId, password, userAlias, role, createTime)
         values ( #{userId}
                , #{password}
-               , #{alias}
+               , #{userAlias}
                , 0
                , NOW());
     </insert>
+
+
+    <select id="findHashByUserid" resultType="String" parameterType="com.zeroinon.chatterboard.dto.UserDTO">
+        select password
+        from user
+        where 1=1
+        and UserId = #{userId};
+    </select>
 
 
 

@@ -1,23 +1,29 @@
 package com.zeroinon.chatterboard.service.impl;
 
+import com.google.gson.Gson;
 import com.zeroinon.chatterboard.dto.response.GenericResponseDTO;
 import com.zeroinon.chatterboard.dto.UserDTO;
 import com.zeroinon.chatterboard.exception.UserException;
 import com.zeroinon.chatterboard.mapper.UserMapper;
+import com.zeroinon.chatterboard.service.JwtService;
 import com.zeroinon.chatterboard.service.UserService;
-import com.zeroinon.chatterboard.utils.SHA256Utils;
+import com.zeroinon.chatterboard.utils.BCryptUtils;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 @Service
-public class UserServiceImpl implements UserService {
+public class Account implements UserService {
 
 
     private final UserMapper userMapper;
+    private final JwtService jwtService;
 
-    public UserServiceImpl(UserMapper userMapper) {
+    public Account(UserMapper userMapper, JwtService jwtService) {
         this.userMapper = userMapper;
+        this.jwtService = jwtService;
     }
-
 
     @Override
     public GenericResponseDTO register(UserDTO userProfile) {
@@ -38,8 +44,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO login(String id, String password) {
-        return null;
+    public GenericResponseDTO login(UserDTO userDTO) {
+
+        String hashed = userMapper.findHashByUserid(userDTO);
+        System.out.println(hashed);
+
+        if(hashed == null || !BCrypt.checkpw(userDTO.getPassword(), hashed)){
+            throw new UserException.InvalidPassword("Invalid Password");
+        }
+        String access = jwtService.generateToken(userDTO.getUserId(), JwtService.TokenRole.ACCESS);
+        String refresh = jwtService.generateToken(userDTO.getUserId(), JwtService.TokenRole.REFRESH);
+        HashMap jwt = new HashMap();
+        jwt.put("access", access);
+        jwt.put("refresh", refresh);
+        return GenericResponseDTO.of(jwt);
     }
 
     @Override
@@ -55,7 +73,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePassword(String id, String oldPassword, String newPassword) {
+    public GenericResponseDTO updatePassword(UserDTO userDTO) {
+
+        return null;
     }
 
     @Override

@@ -15,13 +15,13 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     @org.springframework.web.bind.annotation.ExceptionHandler
-    public ResponseEntity<ErrorResponseDTO> handleUserAuthenticationException(UserException ax) {
+    public ResponseEntity<ErrorResponseDTO> handleUserAuthenticationException(UserException.InvalidPassword iv) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                                                             false,
                                                             ResultCode.UNAUTHORIZED.getCODE(),
                                                             ResultCode.UNAUTHORIZED.getMESSAGE());
 
-        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(409));
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(401));
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
@@ -34,7 +34,15 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(409));
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<ErrorResponseDTO> handleIllegalArgumentsException(IllegalArgumentException il) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                false,
+                ResultCode.NOT_ACCEPTABLE.getCODE(),
+                il.getMessage());
 
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(406));
+    }
 
 
     @org.springframework.web.bind.annotation.ExceptionHandler

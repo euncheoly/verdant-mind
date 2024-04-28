@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import java.util.Arrays;
 
 
-@Getter
 public enum ResultCode {
 
 
@@ -16,8 +15,11 @@ public enum ResultCode {
     UNAUTHORIZED(10401, HttpStatus.UNAUTHORIZED, "Invalid credentials or user not found"),
     FORBIDDEN(10403, HttpStatus.FORBIDDEN, "User not authorized to perform this action"),
 
+    NOT_ACCEPTABLE(10406, HttpStatus.NOT_ACCEPTABLE, "Data is not acceptable"),
+
     // Member related results
     DATA_ALREADY_EXISTS(10409, HttpStatus.CONFLICT, "Data already exists"),
+
 
     // Comment related results
     COMMENT_NOT_FOUND(10404, HttpStatus.NOT_FOUND, "Comment not found"),
@@ -46,7 +48,15 @@ public enum ResultCode {
         this.MESSAGE = MESSAGE;
     }
 
+    public Integer getCODE() {
+        return CODE;
+    }
 
+    public HttpStatus getHTTP_STATUS() {
+        return HTTP_STATUS;
+    }
 
-
+    public String getMESSAGE() {
+        return MESSAGE;
+    }
 }

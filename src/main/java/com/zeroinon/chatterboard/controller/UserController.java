@@ -6,7 +6,7 @@ import com.zeroinon.chatterboard.base.constant.ResultCode;
 import com.zeroinon.chatterboard.dto.response.GenericResponseDTO;
 import com.zeroinon.chatterboard.dto.UserDTO;
 import com.zeroinon.chatterboard.exception.GeneralException;
-import com.zeroinon.chatterboard.service.impl.UserServiceImpl;
+import com.zeroinon.chatterboard.service.impl.Account;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
@@ -20,28 +20,45 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 
-    private final UserServiceImpl userServiceImpl;
+    private final Account account;
 
-    public UserController(UserServiceImpl userServiceImpl) {
-        this.userServiceImpl = userServiceImpl;
+    public UserController(Account account) {
+        this.account = account;
     }
-
 
 
     @RequestMapping("/registration")
-    @TokenValidator/*(userType = JwtRequired.UserType.USER)*/
     public GenericResponseDTO userRegistration(HttpServletRequest req
-                                    , HttpServletResponse resp,
-                                     @RequestBody UserDTO userDTO) {
-        if(UserDTO.hasNullParameterForUserRegister(userDTO)){
+            , HttpServletResponse resp,
+                                               @RequestBody UserDTO userDTO) {
+        if (UserDTO.hasNullParameterForUserRegister(userDTO)) {
             throw new GeneralException.MissingParameters(ResultCode.BAD_REQUEST.getMESSAGE());
         }
-        return userServiceImpl.register(userDTO);
+        return account.register(userDTO);
     }
 
 
+    @RequestMapping("/login")
+    public GenericResponseDTO login(HttpServletRequest req
+                                    , HttpServletResponse resp,
+                                    @RequestBody UserDTO userDTO) {
+        if (UserDTO.hasNullParameterForLogin(userDTO)) {
+            throw new GeneralException.MissingParameters(ResultCode.BAD_REQUEST.getMESSAGE());
+        }
+        return account.login(userDTO);
+    }
 
 
+    @TokenValidator
+    @RequestMapping("/password-update")
+    public GenericResponseDTO changePassword(HttpServletRequest req
+            , HttpServletResponse resp,
+                                    @RequestBody UserDTO userDTO) {
+        if (UserDTO.hasNullParameterForChangePassword(userDTO)) {
+            throw new GeneralException.MissingParameters(ResultCode.BAD_REQUEST.getMESSAGE());
+        }
+        return account.updatePassword(userDTO);
+    }
 
 
 }

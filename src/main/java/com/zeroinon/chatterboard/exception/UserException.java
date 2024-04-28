@@ -19,7 +19,11 @@ public class UserException extends RuntimeException {
         }
     }
 
-
+    public static class InvalidPassword extends UserException {
+        public InvalidPassword(String message) {
+            super(message);
+        }
+    }
 
 
 
