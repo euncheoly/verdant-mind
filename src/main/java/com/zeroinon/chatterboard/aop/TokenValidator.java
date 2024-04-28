@@ -10,11 +10,14 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface TokenValidator {
 
-//    public static enum UserType {
-//        USER, ADMIN
-//    }
-//
-//    UserType userType();
+    UserLevel userLevel() default UserLevel.USER_ONLY;
+
+    enum UserLevel {
+        USER_ONLY,
+        ADMIN_ONLY,
+        ANYONE
+    }
+
 
 }
 
