@@ -26,9 +26,9 @@ public class UserServiceImpl implements UserService {
         if (duplicateResult) {
             throw new UserException.DuplicatedUserID("Duplicated User ID");
         }
+//        userProfile.setPassword(SHA256Utils.encrypt(userProfile.getPassword()));
+        userProfile.setPassword(BCryptUtils.bcryptHash(userProfile.getPassword()));
 
-        userProfile.setPassword(SHA256Utils.encrypt(userProfile.getPassword()));
-        userProfile.setWithdrawnUser(false);
 
         int registerResult = userMapper.insertUser(userProfile);
         if (registerResult != 1) {
