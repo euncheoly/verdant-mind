@@ -32,7 +32,6 @@ public class Account implements UserService {
         if (duplicateResult) {
             throw new UserException.DuplicatedUserID("Duplicated User ID");
         }
-//        userProfile.setPassword(SHA256Utils.encrypt(userProfile.getPassword()));
         userProfile.setPassword(BCryptUtils.bcryptHash(userProfile.getPassword()));
 
 
@@ -47,7 +46,6 @@ public class Account implements UserService {
     public GenericResponseDTO login(UserDTO userDTO) {
 
         String hashed = userMapper.findHashByUserid(userDTO);
-        System.out.println(hashed);
 
         if(hashed == null || !BCrypt.checkpw(userDTO.getPassword(), hashed)){
             throw new UserException.InvalidPassword("Invalid Password");

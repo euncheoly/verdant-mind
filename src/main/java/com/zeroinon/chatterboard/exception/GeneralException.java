@@ -20,6 +20,12 @@ public class GeneralException extends RuntimeException {
         }
     }
 
+    public static class InvalidToken extends GeneralException {
+        public InvalidToken(String message) {
+            super(message);
+        }
+    }
+
 
 
 

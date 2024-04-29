@@ -1,13 +1,17 @@
 package com.zeroinon.chatterboard.exception;
 
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import com.zeroinon.chatterboard.base.constant.ResultCode;
 import com.zeroinon.chatterboard.dto.response.ErrorResponseDTO;
+import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.net.ConnectException;
 
 @RestControllerAdvice
 public class ExceptionHandler extends ResponseEntityExceptionHandler {
@@ -23,6 +27,17 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(401));
     }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<ErrorResponseDTO> handleUnauthorizedTokenException(GeneralException.InvalidToken it) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                false,
+                ResultCode.FORBIDDEN.getCODE(),
+                ResultCode.FORBIDDEN.getMESSAGE());
+
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(403));
+    }
+
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<ErrorResponseDTO> handleDuplicatedDataException(UserException.DuplicatedUserID du) {
@@ -46,13 +61,13 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     @org.springframework.web.bind.annotation.ExceptionHandler
-    public ResponseEntity<ErrorResponseDTO> handleDatabasConnectionException(CannotGetJdbcConnectionException jdbc) {
+    public ResponseEntity<ErrorResponseDTO> handleDatabaseConnectionException(MyBatisSystemException my) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 false,
                 ResultCode.NETWORK_ERROR.getCODE(),
                 ResultCode.NETWORK_ERROR.getMESSAGE());
 
-        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(500));
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(501));
     }
 
 

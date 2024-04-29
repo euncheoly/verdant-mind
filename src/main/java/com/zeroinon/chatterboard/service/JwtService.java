@@ -3,9 +3,12 @@ package com.zeroinon.chatterboard.service;
 
 import com.zeroinon.chatterboard.dto.UserDTO;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +34,15 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public boolean isValid(String token, UserDTO userDTO) {
-        String userId =  extractUserId(token);
-        return userId.equals(userDTO.getUserId()) && !isTokenExpired(token);
+    public boolean isValid(String token) {
+        try{
+            extractUserId(token);
+            return  !isTokenExpired(token);
+        }catch (SignatureException | ExpiredJwtException s){
+            return false;
+        }
     }
+
 
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
@@ -74,13 +82,13 @@ public class JwtService {
                 .setSubject(userId)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + duration))
+                .claim("role", tokenRole)
                 .signWith(getSigningKey())
                 .compact();
         return token;
     }
 
     private SecretKey getSigningKey() {
-        System.out.println("jwtSecretKey: " + jwtSecretKey );
         byte[] keyBytes = Decoders.BASE64URL.decode(jwtSecretKey);
         return Keys.hmacShaKeyFor(keyBytes);
 

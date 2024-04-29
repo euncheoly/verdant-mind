@@ -1,5 +1,6 @@
 package com.zeroinon.chatterboard.aop;
 
+import com.zeroinon.chatterboard.exception.GeneralException;
 import com.zeroinon.chatterboard.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.JoinPoint;
@@ -28,7 +29,9 @@ public class ValidationAspect {
         String accessToken  = request.getHeader("Authorization");
         String token = accessToken.replace("Bearer ", "");
 
-        String userId = jwtService.extractUserId(token);
+        if(!jwtService.isValid(token)){
+            throw new GeneralException.InvalidToken("Invalid token");
+        }
 
 
     }
