@@ -50,13 +50,18 @@ public class Account implements UserService {
         if(hashed == null || !BCrypt.checkpw(userDTO.getPassword(), hashed)){
             throw new UserException.InvalidPassword("Invalid Password");
         }
-        String access = jwtService.generateToken(userDTO.getUserId(), JwtService.TokenRole.ACCESS);
-        String refresh = jwtService.generateToken(userDTO.getUserId(), JwtService.TokenRole.REFRESH);
+
+        JwtService.AccountRole accountRole = userMapper.isAdminPrivileged(userDTO.getUserId()) == 1
+                ? JwtService.AccountRole.ADMIN : JwtService.AccountRole.USER;
+
+        String access = jwtService.generateToken(userDTO.getUserId(), JwtService.TokenRole.ACCESS, accountRole);
+        String refresh = jwtService.generateToken(userDTO.getUserId(), JwtService.TokenRole.REFRESH, accountRole);
         HashMap jwt = new HashMap();
         jwt.put("access", access);
         jwt.put("refresh", refresh);
         return GenericResponseDTO.of(jwt);
     }
+
 
     @Override
     public boolean isDuplicateId(String id) {
@@ -72,7 +77,7 @@ public class Account implements UserService {
 
     @Override
     public GenericResponseDTO updatePassword(UserDTO userDTO) {
-
+        System.out.println("updating password.....");
         return null;
     }
 

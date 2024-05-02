@@ -7,7 +7,7 @@
         select count(*)
         from user
         where 1=1
-        and isWithdrawn = 0
+        and AccountStatus != 3
         and userId = #{userId};
 
     </select>
@@ -17,8 +17,10 @@
         values ( #{userId}
                , #{password}
                , #{userAlias}
-               , 0
+               , #{role}
                , NOW());
+
+
     </insert>
 
 
@@ -30,6 +32,13 @@
     </select>
 
 
+    <select id="isAdminPrivileged" resultType="int" parameterType="String">
+        select count(*)
+        from user
+        where 1=1
+        and UserId = #{userId}
+        and role = 1;
+    </select>
 
 </mapper>
 

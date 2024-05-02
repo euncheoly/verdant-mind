@@ -12,5 +12,7 @@ public interface UserMapper {
 
     int insertUser(UserDTO userDTO);
 
+    int isAdminPrivileged(String userId);
+
 
 }

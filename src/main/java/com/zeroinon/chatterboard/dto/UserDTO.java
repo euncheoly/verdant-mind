@@ -22,7 +22,7 @@ public class UserDTO {
     private String password;
     private String newPassword;
     private String newPasswordConfirm;
-    private String alias;
+    private String userAlias;
     private int role;
     private AccountStatus accountStatus;
 
@@ -30,7 +30,7 @@ public class UserDTO {
     public static boolean hasNullParameterForUserRegister(UserDTO userDTO) {
         return userDTO.getUserId() == null ||
                 userDTO.getPassword() == null ||
-                userDTO.getAlias() == null;
+                userDTO.getUserAlias() == null;
     }
 
     public static boolean hasNullParameterForLogin(UserDTO userDTO) {

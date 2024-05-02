@@ -5,12 +5,12 @@ import lombok.Getter;
 @Getter
 public class ResponseDTO {
 
-    private final Boolean IS_SUCCESS;
+    private final Boolean RESULT;
     private final Integer CODE;
     private final String MESSAGE;
 
-    public ResponseDTO(Boolean IS_SUCCESS, Integer CODE, String MESSAGE) {
-        this.IS_SUCCESS = IS_SUCCESS;
+    public ResponseDTO(Boolean RESULT, Integer CODE, String MESSAGE) {
+        this.RESULT = RESULT;
         this.CODE = CODE;
         this.MESSAGE = MESSAGE;
     }
