@@ -51,10 +51,11 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<ErrorResponseDTO> handleIllegalArgumentsException(IllegalArgumentException il) {
+        il.printStackTrace();
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 false,
                 ResultCode.NOT_ACCEPTABLE.getCODE(),
-                il.getMessage());
+                ResultCode.NOT_ACCEPTABLE.getMESSAGE());
 
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(406));
     }
@@ -62,17 +63,19 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<ErrorResponseDTO> handleDatabaseConnectionException(MyBatisSystemException my) {
+        my.printStackTrace();
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 false,
                 ResultCode.NETWORK_ERROR.getCODE(),
                 ResultCode.NETWORK_ERROR.getMESSAGE());
 
-        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(501));
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(500));
     }
 
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<ErrorResponseDTO> handleSQLSyntaxErrorException(BadSqlGrammarException sql ) {
+        sql.printStackTrace();
         logger.error(sql.getMessage());
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 false,
@@ -99,6 +102,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<ErrorResponseDTO> handleUndefinedException(Exception ex) {
         logger.error(ex.getMessage(), ex);
+        ex.printStackTrace();
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 false,
                 ResultCode.INTERNAL_SERVER_ERROR.getCODE(),

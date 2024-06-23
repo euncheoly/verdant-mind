@@ -1,6 +1,5 @@
 package com.zeroinon.chatterboard.service.impl;
 
-import com.google.gson.Gson;
 import com.zeroinon.chatterboard.dto.response.GenericResponseDTO;
 import com.zeroinon.chatterboard.dto.UserDTO;
 import com.zeroinon.chatterboard.exception.UserException;
@@ -9,9 +8,12 @@ import com.zeroinon.chatterboard.service.JwtService;
 import com.zeroinon.chatterboard.service.UserService;
 import com.zeroinon.chatterboard.utils.BCryptUtils;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class Account implements UserService {
@@ -42,6 +44,7 @@ public class Account implements UserService {
         return GenericResponseDTO.of(registerResult);
     }
 
+
     @Override
     public GenericResponseDTO login(UserDTO userDTO) {
 
@@ -51,7 +54,7 @@ public class Account implements UserService {
             throw new UserException.InvalidPassword("Invalid Password");
         }
 
-        JwtService.AccountRole accountRole = userMapper.isAdminPrivileged(userDTO.getUserId()) == 1
+        JwtService.AccountRole accountRole = isAdminPrivileged(userDTO.getUserId()) == 1
                 ? JwtService.AccountRole.ADMIN : JwtService.AccountRole.USER;
 
         String access = jwtService.generateToken(userDTO.getUserId(), JwtService.TokenRole.ACCESS, accountRole);
@@ -84,4 +87,19 @@ public class Account implements UserService {
     @Override
     public void deleteId(String id, String password) {
     }
+
+    @Transactional(readOnly = true)
+    @Cacheable(value = "authorizationLevel", key = "#userId")
+    public int isAdminPrivileged(String userId) {
+        return  userMapper.isAdminPrivileged(userId);
+    }
+
+
+
+    @Cacheable(value = "usersCache")
+    public List<UserDTO> findAllUsers() {
+        return userMapper.findAllUsers();
+    }
+
+
 }

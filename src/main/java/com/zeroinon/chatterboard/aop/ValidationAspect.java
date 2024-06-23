@@ -2,6 +2,7 @@ package com.zeroinon.chatterboard.aop;
 
 import com.zeroinon.chatterboard.exception.GeneralException;
 import com.zeroinon.chatterboard.service.JwtService;
+import com.zeroinon.chatterboard.service.impl.Account;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -16,32 +17,29 @@ import org.springframework.stereotype.Component;
 public class ValidationAspect {
 
 
-
     private final JwtService jwtService;
+    private final Account account;
 
-
-    public ValidationAspect(JwtService jwtService) {
+    public ValidationAspect(JwtService jwtService, Account account) {
         this.jwtService = jwtService;
+        this.account = account;
+    }
+
+    @Pointcut("@annotation(tokenValidator)")
+    public void callAt(TokenValidator tokenValidator) {
     }
 
 
-    @Pointcut("@annotation(tokenValidator)")
-    public void callAt(TokenValidator tokenValidator) {}
-
-
-//    @Before("@annotation(com.zeroinon.chatterboard.aop.TokenValidator)")
+    //    @Before("@annotation(com.zeroinon.chatterboard.aop.TokenValidator)")
     @Before("callAt(tokenValidator)")
     public void validateJwt(JoinPoint joinPoint, TokenValidator tokenValidator) throws Throwable {
 
         HttpServletRequest request = (HttpServletRequest) joinPoint.getArgs()[0];
-        String accessToken  = request.getHeader("Authorization");
+        String accessToken = request.getHeader("Authorization");
         String token = accessToken.replace("Bearer ", "");
 
-        if(!jwtService.isValidEveryoneToken(token)){
-            throw new GeneralException.InvalidToken("Invalid token");
-        }
 
-        switch (tokenValidator.userLevel()){
+        switch (tokenValidator.accessLevel()){
             case ANYONE :
                 if(!jwtService.isValidEveryoneToken(token)){
                     throw new GeneralException.InvalidToken("Invalid token");
@@ -56,10 +54,11 @@ public class ValidationAspect {
             default:
                 log.error("[undefined method level]:"+ joinPoint.getSignature().getName());
         }
+
+
+
+
     }
-
-
-
 
 
 }
