@@ -37,8 +37,8 @@ dependencies {
 	//bcrypt
 	implementation 'org.mindrot:jbcrypt:0.4'
 
-	//json
-	implementation 'com.google.code.gson:gson:2.10.1'
+	//jedis
+	implementation 'redis.clients:jedis:5.1.2'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

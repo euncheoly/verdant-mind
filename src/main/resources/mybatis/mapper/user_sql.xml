@@ -13,10 +13,18 @@
     </select>
 
     <insert id="insertUser">
-        INSERT INTO user(userId, password, userAlias, role, createTime)
+        INSERT INTO user(userId, password, userAlias,
+                         email,
+                         dateofbirth,
+                         phone,
+                         role,
+                         createTime)
         values ( #{userId}
                , #{password}
                , #{userAlias}
+               , #{email}
+               , #{dateOfBirth}
+               , #{phoneNumber}
                , #{role}
                , NOW());
 
@@ -39,6 +47,25 @@
         and UserId = #{userId}
         and role = 1;
     </select>
+
+
+    <select id="getMemberInfo" resultType="map" parameterType="int">
+        select userId,
+               userAlias,
+               dateofbirth,
+               email,
+               phone,
+               DATE_FORMAT(createTime, '%Y-%m-%d') as createTime,
+               role
+        from user
+        where 1=1
+          and id = #{id}
+        ;
+
+    </select>
+
+
+
 
 </mapper>
 

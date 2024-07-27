@@ -10,8 +10,12 @@ import com.zeroinon.chatterboard.service.UserService;
 import com.zeroinon.chatterboard.utils.BCryptUtils;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class Account implements UserService {
@@ -19,10 +23,12 @@ public class Account implements UserService {
 
     private final UserMapper userMapper;
     private final JwtService jwtService;
+    private final JedisPool jedisPool;
 
-    public Account(UserMapper userMapper, JwtService jwtService) {
+    public Account(UserMapper userMapper, JwtService jwtService, JedisPool jedisPool) {
         this.userMapper = userMapper;
         this.jwtService = jwtService;
+        this.jedisPool = jedisPool;
     }
 
     @Override
@@ -33,7 +39,6 @@ public class Account implements UserService {
             throw new UserException.DuplicatedUserID("Duplicated User ID");
         }
         userProfile.setPassword(BCryptUtils.bcryptHash(userProfile.getPassword()));
-
 
         int registerResult = userMapper.insertUser(userProfile);
         if (registerResult != 1) {
@@ -70,10 +75,6 @@ public class Account implements UserService {
         return isDuplicateId;
     }
 
-    @Override
-    public UserDTO getUserInfo(String userId) {
-        return null;
-    }
 
     @Override
     public GenericResponseDTO updatePassword(UserDTO userDTO) {
@@ -84,4 +85,23 @@ public class Account implements UserService {
     @Override
     public void deleteId(String id, String password) {
     }
+
+    @Override
+    public GenericResponseDTO getMemberInfo(int id) {
+        Map<String, String> memberInfo = new HashMap<>();
+        String memberInfoRedisKey =  "users:%d".formatted(id);
+        try(Jedis jedis = jedisPool.getResource()){
+
+            memberInfo = jedis.hgetAll(memberInfoRedisKey);
+            if(memberInfo.size() != 0 && memberInfo != null){
+                return GenericResponseDTO.of(memberInfo);
+            }
+            memberInfo = userMapper.getMemberInfo(id);
+            jedis.hmset(memberInfoRedisKey, memberInfo);
+            jedis.expire(memberInfoRedisKey, 10L);
+            return GenericResponseDTO.of(memberInfo);
+        }
+    }
+
+
 }

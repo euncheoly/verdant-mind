@@ -55,7 +55,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
                 false,
                 ResultCode.NOT_ACCEPTABLE.getCODE(),
                 il.getMessage());
-
+                il.printStackTrace();
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(406));
     }
 
@@ -66,7 +66,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
                 false,
                 ResultCode.NETWORK_ERROR.getCODE(),
                 ResultCode.NETWORK_ERROR.getMESSAGE());
-
+                my.printStackTrace();
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(501));
     }
 
@@ -78,7 +78,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
                 false,
                 ResultCode.SQL_SYNTAX_ERROR.getCODE(),
                 ResultCode.SQL_SYNTAX_ERROR.getMESSAGE());
-
+                sql.printStackTrace();
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(500));
     }
 
@@ -90,7 +90,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
                 false,
                 ResultCode.BAD_REQUEST.getCODE(),
                 ResultCode.BAD_REQUEST.getMESSAGE());
-
+                du.printStackTrace();
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(400));
     }
 
@@ -103,7 +103,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
                 false,
                 ResultCode.INTERNAL_SERVER_ERROR.getCODE(),
                 ResultCode.INTERNAL_SERVER_ERROR.getMESSAGE());
-
+                ex.printStackTrace();
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(500));
     }
 

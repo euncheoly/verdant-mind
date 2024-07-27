@@ -13,14 +13,11 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @Aspect
-public class ValidationAspect {
-
-
+public class TokenValidationAspect {
 
     private final JwtService jwtService;
 
-
-    public ValidationAspect(JwtService jwtService) {
+    public TokenValidationAspect(JwtService jwtService) {
         this.jwtService = jwtService;
     }
 
@@ -29,7 +26,6 @@ public class ValidationAspect {
     public void callAt(TokenValidator tokenValidator) {}
 
 
-//    @Before("@annotation(com.zeroinon.chatterboard.aop.TokenValidator)")
     @Before("callAt(tokenValidator)")
     public void validateJwt(JoinPoint joinPoint, TokenValidator tokenValidator) throws Throwable {
 
@@ -40,9 +36,8 @@ public class ValidationAspect {
         if(!jwtService.isValidEveryoneToken(token)){
             throw new GeneralException.InvalidToken("Invalid token");
         }
-
         switch (tokenValidator.userLevel()){
-            case ANYONE :
+            case ANY_ACCOUNT:
                 if(!jwtService.isValidEveryoneToken(token)){
                     throw new GeneralException.InvalidToken("Invalid token");
                 }
@@ -57,8 +52,6 @@ public class ValidationAspect {
                 log.error("[undefined method level]:"+ joinPoint.getSignature().getName());
         }
     }
-
-
 
 
 

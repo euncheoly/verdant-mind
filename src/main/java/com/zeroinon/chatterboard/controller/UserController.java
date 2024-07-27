@@ -12,9 +12,12 @@ import com.zeroinon.chatterboard.service.impl.Account;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/users")
@@ -71,6 +74,20 @@ public class UserController {
         }
         return GenericResponseDTO.of(jwtService.reissueToken(tokenDTO.getRefreshToken()));
     }
+
+
+    @RequestMapping("/{id}/info")
+    public GenericResponseDTO getMemberInfo(HttpServletRequest req,
+                                            HttpServletResponse resp,
+                                            @PathVariable int id) {
+        if (Objects.isNull(id)) {
+            throw new GeneralException.MissingParameters(ResultCode.BAD_REQUEST.getMESSAGE());
+        }
+        return account.getMemberInfo(id);
+    }
+
+
+
 
 
 }

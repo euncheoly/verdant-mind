@@ -3,6 +3,8 @@ package com.zeroinon.chatterboard.mapper;
 import com.zeroinon.chatterboard.dto.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Map;
+
 @Mapper
 public interface UserMapper {
 
@@ -14,5 +16,5 @@ public interface UserMapper {
 
     int isAdminPrivileged(String userId);
 
-
+    Map<String, String>  getMemberInfo(int id);
 }
