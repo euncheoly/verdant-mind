@@ -95,6 +95,18 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<ErrorResponseDTO> handleUnavailableDataRequest(GeneralException.RequestDataUnavailable ru) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                false,
+                ResultCode.DATA_NOT_FOUND.getCODE(),
+                ResultCode.DATA_NOT_FOUND.getMESSAGE());
+        ru.printStackTrace();
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(404));
+    }
+
+
+
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<ErrorResponseDTO> handleUndefinedException(Exception ex) {

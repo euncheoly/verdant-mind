@@ -1,21 +1,21 @@
 package com.zeroinon.chatterboard.service.impl;
 
-import com.google.gson.Gson;
+
 import com.zeroinon.chatterboard.dto.response.GenericResponseDTO;
 import com.zeroinon.chatterboard.dto.UserDTO;
+import com.zeroinon.chatterboard.exception.GeneralException;
 import com.zeroinon.chatterboard.exception.UserException;
 import com.zeroinon.chatterboard.mapper.UserMapper;
 import com.zeroinon.chatterboard.service.JwtService;
 import com.zeroinon.chatterboard.service.UserService;
 import com.zeroinon.chatterboard.utils.BCryptUtils;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class Account implements UserService {
@@ -23,12 +23,12 @@ public class Account implements UserService {
 
     private final UserMapper userMapper;
     private final JwtService jwtService;
-    private final JedisPool jedisPool;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    public Account(UserMapper userMapper, JwtService jwtService, JedisPool jedisPool) {
+    public Account(UserMapper userMapper, JwtService jwtService, RedisTemplate<String, Object> redisTemplate) {
         this.userMapper = userMapper;
         this.jwtService = jwtService;
-        this.jedisPool = jedisPool;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -90,17 +90,17 @@ public class Account implements UserService {
     public GenericResponseDTO getMemberInfo(int id) {
         Map<String, String> memberInfo = new HashMap<>();
         String memberInfoRedisKey =  "users:%d".formatted(id);
-        try(Jedis jedis = jedisPool.getResource()){
-
-            memberInfo = jedis.hgetAll(memberInfoRedisKey);
-            if(memberInfo.size() != 0 && memberInfo != null){
-                return GenericResponseDTO.of(memberInfo);
-            }
-            memberInfo = userMapper.getMemberInfo(id);
-            jedis.hmset(memberInfoRedisKey, memberInfo);
-            jedis.expire(memberInfoRedisKey, 10L);
+        memberInfo = (Map<String, String>) redisTemplate.opsForValue().get(memberInfoRedisKey);
+        if (memberInfo != null && memberInfo.size() != 0) {
             return GenericResponseDTO.of(memberInfo);
         }
+        memberInfo = userMapper.getMemberInfo(id);
+        if (memberInfo == null) {
+            throw new GeneralException.RequestDataUnavailable("Member Not Found");
+        }
+        redisTemplate.opsForValue().set(memberInfoRedisKey, memberInfo, Duration.ofSeconds(30));
+        return GenericResponseDTO.of(memberInfo);
+
     }
 
 

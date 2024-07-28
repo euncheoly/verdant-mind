@@ -27,6 +27,13 @@ public class GeneralException extends RuntimeException {
     }
 
 
+    public static class RequestDataUnavailable extends GeneralException {
+        public RequestDataUnavailable(String message) {
+            super(message);
+        }
+    }
+
+
 
 
 
