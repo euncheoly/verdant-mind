@@ -13,6 +13,9 @@ public interface UserService {
 
     GenericResponseDTO getMemberInfo(int id);
 
+    GenericResponseDTO getMemberInfoHash(int id);
+
+
     GenericResponseDTO updatePassword(UserDTO userDTO);
 
     void deleteId(String id, String password);

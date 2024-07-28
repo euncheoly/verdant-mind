@@ -10,6 +10,8 @@ import com.zeroinon.chatterboard.service.JwtService;
 import com.zeroinon.chatterboard.service.UserService;
 import com.zeroinon.chatterboard.utils.BCryptUtils;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -102,6 +104,31 @@ public class Account implements UserService {
         return GenericResponseDTO.of(memberInfo);
 
     }
+
+
+
+
+    @Override
+    public GenericResponseDTO getMemberInfoHash(int id) {
+        String memberInfoRedisKey = "users:%d".formatted(id);
+        HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
+        Map<String, String> memberInfo = hashOperations.entries(memberInfoRedisKey);
+        if (memberInfo != null && !memberInfo.isEmpty()) {
+            return GenericResponseDTO.of(memberInfo);
+        }
+
+        memberInfo = userMapper.getMemberInfo(id);
+        if (memberInfo == null) {
+            throw new GeneralException.RequestDataUnavailable("Member Not Found");
+        }
+
+        hashOperations.putAll(memberInfoRedisKey, memberInfo);
+        redisTemplate.expire(memberInfoRedisKey, Duration.ofSeconds(30));
+
+        return GenericResponseDTO.of(memberInfo);
+
+    }
+
 
 
 }

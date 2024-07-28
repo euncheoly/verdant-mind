@@ -86,7 +86,15 @@ public class UserController {
         return account.getMemberInfo(id);
     }
 
-
+    @RequestMapping("/redis-hash/{id}/info")
+    public GenericResponseDTO getMemberInfoHash(HttpServletRequest req,
+                                            HttpServletResponse resp,
+                                            @PathVariable int id) {
+        if (Objects.isNull(id)) {
+            throw new GeneralException.MissingParameters(ResultCode.BAD_REQUEST.getMESSAGE());
+        }
+        return account.getMemberInfoHash(id);
+    }
 
 
 
