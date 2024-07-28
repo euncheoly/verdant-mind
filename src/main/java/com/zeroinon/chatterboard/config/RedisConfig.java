@@ -22,7 +22,6 @@ public class RedisConfig {
 
     @Bean
     RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-
         PolymorphicTypeValidator polymorphicTypeValidator = BasicPolymorphicTypeValidator
                 .builder()
                 .allowIfSubType(Object.class)

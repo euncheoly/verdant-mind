@@ -13,7 +13,7 @@ public interface UserService {
 
     GenericResponseDTO getMemberInfo(int id);
 
-    GenericResponseDTO getMemberInfoHash(int id);
+    GenericResponseDTO hashGetMemberInfo(int id);
 
 
     GenericResponseDTO updatePassword(UserDTO userDTO);

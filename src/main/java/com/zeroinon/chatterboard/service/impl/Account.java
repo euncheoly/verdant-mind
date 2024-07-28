@@ -102,26 +102,22 @@ public class Account implements UserService {
         }
         redisTemplate.opsForValue().set(memberInfoRedisKey, memberInfo, Duration.ofSeconds(30));
         return GenericResponseDTO.of(memberInfo);
-
     }
 
 
 
-
     @Override
-    public GenericResponseDTO getMemberInfoHash(int id) {
-        String memberInfoRedisKey = "users:%d".formatted(id);
+    public GenericResponseDTO hashGetMemberInfo(int id) {
+        String memberInfoRedisKey = "hash-users:%d".formatted(id);
         HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
         Map<String, String> memberInfo = hashOperations.entries(memberInfoRedisKey);
         if (memberInfo != null && !memberInfo.isEmpty()) {
             return GenericResponseDTO.of(memberInfo);
         }
-
         memberInfo = userMapper.getMemberInfo(id);
         if (memberInfo == null) {
             throw new GeneralException.RequestDataUnavailable("Member Not Found");
         }
-
         hashOperations.putAll(memberInfoRedisKey, memberInfo);
         redisTemplate.expire(memberInfoRedisKey, Duration.ofSeconds(30));
 

@@ -93,7 +93,7 @@ public class UserController {
         if (Objects.isNull(id)) {
             throw new GeneralException.MissingParameters(ResultCode.BAD_REQUEST.getMESSAGE());
         }
-        return account.getMemberInfoHash(id);
+        return account.hashGetMemberInfo(id);
     }
 
 
