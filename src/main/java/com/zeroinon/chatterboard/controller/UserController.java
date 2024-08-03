@@ -12,16 +12,16 @@ import com.zeroinon.chatterboard.service.impl.Account;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/users")
+@Log4j2
 public class UserController {
 
 
@@ -33,7 +33,6 @@ public class UserController {
         this.jwtService = jwtService;
     }
 
-
     @RequestMapping("/registration")
     public GenericResponseDTO userRegistration(HttpServletRequest req, HttpServletResponse resp,
                                                @RequestBody UserDTO userDTO) {
@@ -44,7 +43,8 @@ public class UserController {
     }
 
 
-    
+
+
     @RequestMapping("/login")
     public GenericResponseDTO login(HttpServletRequest req, HttpServletResponse resp,
                                     @RequestBody UserDTO userDTO) {
@@ -55,8 +55,7 @@ public class UserController {
     }
 
 
-
-    @TokenValidator(accessLevel = TokenValidator.AccessLevel.ADMIN_ONLY)
+    @TokenValidator
     @RequestMapping("/password-update")
     public GenericResponseDTO changePassword(HttpServletRequest req, HttpServletResponse resp,
                                              @RequestBody UserDTO userDTO) {
@@ -67,7 +66,6 @@ public class UserController {
     }
 
 
-
     @RequestMapping("/tokens")
     public GenericResponseDTO reissueJwtToken(HttpServletRequest req, HttpServletResponse resp,
                                               @RequestBody TokenDTO tokenDTO) {
@@ -76,6 +74,28 @@ public class UserController {
         }
         return GenericResponseDTO.of(jwtService.reissueToken(tokenDTO.getRefreshToken()));
     }
+
+
+    @RequestMapping("/{id}/info")
+    public GenericResponseDTO getMemberInfo(HttpServletRequest req,
+                                            HttpServletResponse resp,
+                                            @PathVariable int id) {
+        if (Objects.isNull(id)) {
+            throw new GeneralException.MissingParameters(ResultCode.BAD_REQUEST.getMESSAGE());
+        }
+        return account.getMemberInfo(id);
+    }
+
+    @RequestMapping("/redis-hash/{id}/info")
+    public GenericResponseDTO getMemberInfoHash(HttpServletRequest req,
+                                            HttpServletResponse resp,
+                                            @PathVariable int id) {
+        if (Objects.isNull(id)) {
+            throw new GeneralException.MissingParameters(ResultCode.BAD_REQUEST.getMESSAGE());
+        }
+        return account.hashGetMemberInfo(id);
+    }
+
 
 
 }

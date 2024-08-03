@@ -23,6 +23,9 @@ public class UserDTO {
     private String newPassword;
     private String newPasswordConfirm;
     private String userAlias;
+    private String dateOfBirth;
+    private String email;
+    private String phoneNumber;
     private int role;
     private AccountStatus accountStatus;
 
@@ -30,7 +33,8 @@ public class UserDTO {
     public static boolean hasNullParameterForUserRegister(UserDTO userDTO) {
         return userDTO.getUserId() == null ||
                 userDTO.getPassword() == null ||
-                userDTO.getUserAlias() == null;
+                userDTO.getUserAlias() == null||
+                userDTO.getEmail() == null;
     }
 
     public static boolean hasNullParameterForLogin(UserDTO userDTO) {

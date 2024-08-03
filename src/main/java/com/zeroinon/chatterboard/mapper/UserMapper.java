@@ -2,8 +2,9 @@ package com.zeroinon.chatterboard.mapper;
 
 import com.zeroinon.chatterboard.dto.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.data.redis.core.RedisHash;
 
-import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface UserMapper {
@@ -16,7 +17,8 @@ public interface UserMapper {
 
     int isAdminPrivileged(String userId);
 
-    List<UserDTO> findAllUsers();
+    Map<String, String>  getMemberInfo(int id);
 
+    Map<String, String>  getMemberInfoHash(int id);
 
 }

@@ -13,12 +13,21 @@
     </select>
 
     <insert id="insertUser">
-        INSERT INTO user(userId, password, userAlias, role, createTime)
+        INSERT INTO user(userId, password, userAlias,
+                         email,
+                         dateofbirth,
+                         phone,
+                         role,
+                         createTime)
         values ( #{userId}
                , #{password}
                , #{userAlias}
+               , #{email}
+               , #{dateOfBirth}
+               , #{phoneNumber}
                , #{role}
                , NOW());
+
 
     </insert>
 
@@ -32,7 +41,7 @@
 
 
     <select id="isAdminPrivileged" resultType="int" parameterType="String">
-        select count(*) as isAdminPrivileged
+        select count(*)
         from user
         where 1=1
         and UserId = #{userId}
@@ -40,12 +49,21 @@
     </select>
 
 
-    <select id="findAllUsers" resultType="map">
-        select *
+    <select id="getMemberInfo" resultType="map" parameterType="int">
+        select userId,
+               userAlias,
+               dateofbirth,
+               email,
+               phone,
+               DATE_FORMAT(createTime, '%Y-%m-%d') as createTime,
+               role
         from user
-        where 1=1;
+        where 1=1
+          and id = #{id}
+        ;
 
     </select>
+
 
 
 

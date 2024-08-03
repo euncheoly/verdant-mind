@@ -11,7 +11,10 @@ public interface UserService {
 
     boolean isDuplicateId(String id);
 
-    UserDTO getUserInfo(String userId);
+    GenericResponseDTO getMemberInfo(int id);
+
+    GenericResponseDTO hashGetMemberInfo(int id);
+
 
     GenericResponseDTO updatePassword(UserDTO userDTO);
 

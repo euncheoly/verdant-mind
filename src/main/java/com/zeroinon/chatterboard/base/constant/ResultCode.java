@@ -19,6 +19,8 @@ public enum ResultCode {
 
     // Member related results
     DATA_ALREADY_EXISTS(10409, HttpStatus.CONFLICT, "Data already exists"),
+    DATA_NOT_FOUND(10404, HttpStatus.NOT_FOUND, "Data not found"),
+
 
 
     // Comment related results

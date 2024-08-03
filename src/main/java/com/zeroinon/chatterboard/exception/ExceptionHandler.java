@@ -51,37 +51,34 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<ErrorResponseDTO> handleIllegalArgumentsException(IllegalArgumentException il) {
-        il.printStackTrace();
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 false,
                 ResultCode.NOT_ACCEPTABLE.getCODE(),
-                ResultCode.NOT_ACCEPTABLE.getMESSAGE());
-
+                il.getMessage());
+                il.printStackTrace();
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(406));
     }
 
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<ErrorResponseDTO> handleDatabaseConnectionException(MyBatisSystemException my) {
-        my.printStackTrace();
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 false,
                 ResultCode.NETWORK_ERROR.getCODE(),
                 ResultCode.NETWORK_ERROR.getMESSAGE());
-
-        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(500));
+                my.printStackTrace();
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(501));
     }
 
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<ErrorResponseDTO> handleSQLSyntaxErrorException(BadSqlGrammarException sql ) {
-        sql.printStackTrace();
         logger.error(sql.getMessage());
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 false,
                 ResultCode.SQL_SYNTAX_ERROR.getCODE(),
                 ResultCode.SQL_SYNTAX_ERROR.getMESSAGE());
-
+                sql.printStackTrace();
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(500));
     }
 
@@ -93,21 +90,32 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
                 false,
                 ResultCode.BAD_REQUEST.getCODE(),
                 ResultCode.BAD_REQUEST.getMESSAGE());
-
+                du.printStackTrace();
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(400));
     }
+
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<ErrorResponseDTO> handleUnavailableDataRequest(GeneralException.RequestDataUnavailable ru) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                false,
+                ResultCode.DATA_NOT_FOUND.getCODE(),
+                ResultCode.DATA_NOT_FOUND.getMESSAGE());
+        ru.printStackTrace();
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(404));
+    }
+
 
 
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<ErrorResponseDTO> handleUndefinedException(Exception ex) {
         logger.error(ex.getMessage(), ex);
-        ex.printStackTrace();
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
                 false,
                 ResultCode.INTERNAL_SERVER_ERROR.getCODE(),
                 ResultCode.INTERNAL_SERVER_ERROR.getMESSAGE());
-
+                ex.printStackTrace();
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(500));
     }
 

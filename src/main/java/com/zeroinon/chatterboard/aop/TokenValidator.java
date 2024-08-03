@@ -10,11 +10,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface TokenValidator {
 
-    AccessLevel accessLevel() default AccessLevel.ANYONE;
+    UserLevel userLevel() default UserLevel.ANY_ACCOUNT;
 
-    enum AccessLevel {
+    enum UserLevel {
         ADMIN_ONLY,
-        ANYONE
+        ANY_ACCOUNT
     }
 
 
