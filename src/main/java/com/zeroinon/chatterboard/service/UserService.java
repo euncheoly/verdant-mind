@@ -3,6 +3,8 @@ package com.zeroinon.chatterboard.service;
 import com.zeroinon.chatterboard.dto.response.GenericResponseDTO;
 import com.zeroinon.chatterboard.dto.UserDTO;
 
+import java.util.Map;
+
 public interface UserService {
 
     GenericResponseDTO register(UserDTO userProfile);
@@ -15,6 +17,7 @@ public interface UserService {
 
     GenericResponseDTO hashGetMemberInfo(int id);
 
+    Map<String, String> getMemberInfoFromLocalCache(int id);
 
     GenericResponseDTO updatePassword(UserDTO userDTO);
 

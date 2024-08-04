@@ -10,8 +10,8 @@ import com.zeroinon.chatterboard.service.JwtService;
 import com.zeroinon.chatterboard.service.UserService;
 import com.zeroinon.chatterboard.utils.BCryptUtils;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +19,11 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.zeroinon.chatterboard.config.CacheConfig.CACHE1;
+import static com.zeroinon.chatterboard.config.CacheConfig.CACHE2;
+
 @Service
-public class Account implements UserService {
+public class Account implements UserService{
 
 
     private final UserMapper userMapper;
@@ -123,6 +126,18 @@ public class Account implements UserService {
 
         return GenericResponseDTO.of(memberInfo);
 
+    }
+
+
+
+    @Override
+    @Cacheable(cacheNames = CACHE2, key = "'memberinfo:'+ #idx")
+    public Map<String, String> getMemberInfoFromLocalCache(int idx) {
+        Map<String, String> memberInfo = userMapper.getMemberInfo(idx);
+        if (memberInfo == null) {
+            throw new GeneralException.RequestDataUnavailable("Member Not Found");
+        }
+        return memberInfo;
     }
 
 
