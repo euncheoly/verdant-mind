@@ -19,6 +19,5 @@ public interface UserMapper {
 
     Map<String, String>  getMemberInfo(int id);
 
-    Map<String, String>  getMemberInfoHash(int id);
 
 }

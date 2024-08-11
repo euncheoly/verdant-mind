@@ -97,5 +97,14 @@ public class UserController {
     }
 
 
+    @RequestMapping("/springboot-cache/{id}/info")
+    public GenericResponseDTO getMemberInfoFromLocalCache(HttpServletRequest req,
+                                                HttpServletResponse resp,
+                                                @PathVariable int id) {
+        if (Objects.isNull(id)) {
+            throw new GeneralException.MissingParameters(ResultCode.BAD_REQUEST.getMESSAGE());
+        }
+        return GenericResponseDTO.of(account.getMemberInfoFromLocalCache(id));
+    }
 
 }
