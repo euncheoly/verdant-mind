@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ChatterboardApplication {
 
 	public static void main(String[] args) {
+		System.out.println("############ CI TEST @" + System.currentTimeMillis() + "############");
 		SpringApplication.run(ChatterboardApplication.class, args);
 	}
 
